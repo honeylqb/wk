@@ -214,7 +214,7 @@ pageEncoding="utf-8" isELIgnored="false" %>
 
                 <c:if test="${not empty loginUserInfo}">
                     <li class="layui-nav-item  li">
-                        <a href=""><i class="iconfont">&#xe6b8;</i>${loginUserInfo.userName}</a>
+                        <a ><i class="iconfont">&#xe6b8;</i>${loginUserInfo.userName}</a>
                         <dl class="layui-nav-child">
                             <dd><a href="javascript:;">修改信息</a></dd>
                             <dd><a href="${pageContext.request.contextPath}/page/login/login-2.jsp">切换账号</a></dd>
@@ -225,7 +225,7 @@ pageEncoding="utf-8" isELIgnored="false" %>
 
                 <c:if test="${empty loginUserInfo}">
                     <li class="layui-nav-item  li">
-                        <a href=""><i class="iconfont">&#xe732;</i></a>
+                        <a ><i class="iconfont">&#xe732;</i></a>
                         <dl class="layui-nav-child">
                             <dd><a href="${pageContext.request.contextPath}/page/login/login-2.jsp">登录</a></dd>
                             <dd><a href="javascript:;">注册</a></dd>
