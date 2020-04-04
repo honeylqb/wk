@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleManageInfo">
+    <sql id="columnList">
+        <include refid="BaseInfo.BaseColumnListForQuery"></include>
+        role_name roleName,
+        role_code roleCode,
+        role_type roleType,
+        role_desc roleDesc,
+        role_super roleSuper
+    </sql>
+
+    <sql id="queryCondition">
+        <if test="roleCode != null and roleCode !=''  ">
+            and role_codelike CONCAT('%', #{roleCode},'%')
+        </if>
+
+        <if test="roleName != null and roleName !=''  ">
+            and role_name like CONCAT('%', #{roleName},'%')
+        </if>
+
+    </sql>
+
+
+    <!-- 配置查询所有操作 -->
+    <select id="findAll" resultType="Map" >
+        select <include refid="columnList"></include>
+             from sys_role
+        <where>
+            is_delete = 0
+            <include refid="queryCondition"></include>
+        </where>
+        order by create_time
+        <if test="limit != null and limit !=''  ">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from sys_role
+
+        <where>
+            is_delete = 0
+            <include refid="queryCondition"></include>
+        </where>
+    </select>
+    <!-- 配置查询所有操作 -->
+    <select id="findUserRoleByUserID" resultType="Map" >
+        select <include refid="columnList"></include>
+        from sys_role
+        <where>
+         vid in (
+            select role_id  from
+
+            sys_user_role
+            <where>
+               user_id = #{userId}
+                and is_delete = 0
+            </where>
+
+            )
+            and is_delete = 0
+        </where>
+
+    </select>
+
+
+</mapper>

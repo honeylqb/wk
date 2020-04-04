@@ -1,0 +1,7 @@
+# Project exclude paths
+/fileServer/target/
+/HelloWordSpringMVC/target/
+/MVCTest/target/
+/mybatisTest/target/
+/out/
+/WheatEarRCS/target/

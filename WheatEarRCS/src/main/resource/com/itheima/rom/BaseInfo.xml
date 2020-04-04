@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BaseInfo">
+    <sql id="BaseColumnListForQuery">
+        vid vid,
+        <![CDATA[date_format(create_time,'%Y-%m-%d %H:%i:%s')]]> createTime,
+       <![CDATA[date_format(update_time,'%Y-%m-%d %H:%i:%s')]]>  updateTime,
+        create_user createUser,
+        update_user updateUser,
+        is_delete isDelete,
+    </sql>
+
+
+</mapper>

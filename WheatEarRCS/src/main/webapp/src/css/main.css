@@ -1,0 +1,160 @@
+
+.li{
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.fly-footer {
+    margin: 50px 0 0;
+    padding: 20px 0 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #737573;
+    border-top: 1px solid #e2e2e2;
+}
+div {
+    display: block;
+}
+
+.shop-nav .input-search {
+    width: 100%;
+    padding: 30px 0 10px;
+    text-align: center;
+    background-color: #FFF;
+}
+
+.shop-nav .input-search dl dd, .shop-nav .input-search dl dt {
+    display: inline-block;
+    color: #9495a4;
+}
+.shop-nav .input-search dl {
+    position: relative;
+    text-align: left;
+    font-size: 12px;
+    line-height: 30px;
+    top: 5px;
+    left: 10px;
+}
+.shop-nav .input-search {
+    width: 100%;
+    padding: 30px 0 10px;
+    text-align: center;
+    background-color: #FFF;
+}
+
+
+.header {
+    height: 59px;
+    border-bottom: 1px solid #404553;
+    background-color: #393D49;
+}
+.header .layui-container .logo {
+    left: 15px;
+}
+@media screen and (max-width: 750px)
+    .logo, .header-demo .logo {
+        left: 10px;
+    }
+    .logo {
+        position: absolute;
+        left: 0;
+        top: 16px;
+    }
+    .header .layui-container .layui-nav {
+        right: 15px;
+    }
+    .header .layui-nav {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0;
+        background: none;
+    }
+    .iconfont {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .icontouxiang:before {
+        content: "\e65f";
+    }
+
+    .web-font-desc {
+        font-family: "webfont-desc" !important;
+        font-size: 61px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .site-download {
+        margin-top: 80px;
+        font-size: 0;
+    }
+
+    html{background-color: #F2F2F2;}
+<!--开启网页上下滚动-->
+    html,body{ overflow-x: hidden; }
+
+    *{margin:0;padding:0;border:0;}
+    html,body{font:14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;	text-align:center;
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=true，GradientType:0,startColorstr='#094da1', endColorstr='#084ca0');
+        color: #000000;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    #nav li  .txt{line-height:227%;font-weight:bold;display:inline-block;white-space:nowrap;word-break: keep-all;-moz-text-shadow: 1px 1px 1px rgba(0,0,0,0.8); -webkit-text-shadow:1px 1px 1px rgba(0,0,0,0.8);
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+        vertical-align:middle}
+
+
+
+    .fly-marginTop {
+        margin-top: 15px;
+    }
+}
+.layui-container {
+    padding: 0;
+}
+@media screen and (min-width: 1200px)
+    .layui-container {
+        width: 1170px;
+    }
+    @media screen and (min-width: 992px)
+        .layui-container {
+            width: 970px;
+        }
+        @media screen and (min-width: 768px)
+            .layui-container {
+                width: 750px;
+            }
+            .layui-container {
+                position: relative;
+                margin: 0 auto;
+                padding: 0 15px;
+                box-sizing: border-box;
+            }
+            blockquote, body, button, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, input, li, ol, p, pre, td, textarea, th, ul {
+                margin: 0;
+                padding: 0;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+            div {
+                display: block;
+            }
+            body {
+                line-height: 24px;
+                font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+            }
+            html {
+                color: -internal-root-color;
+            }
+            .fly-panel {
+                margin-bottom: 15px;
+                border-radius: 2px;
+                background-color: #fff;
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+            }

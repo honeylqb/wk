@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserManageDao">
+    <sql id="columnList">
+        vid vid,
+        create_time createTime,
+        update_time updateTime,
+        create_user createUser,
+        update_user updateUser,
+        is_delete isDelete,
+        user_name userName,
+        user_account  userAccount,
+        user_password userPassword,
+        user_sex userSex,
+        user_addr userAddr,
+        user_phone userPhone,
+        user_state userState,
+        province_code provinceCode,
+        remark
+
+    </sql>
+
+    <sql id="queryCondition">
+        <if test="userName != null and userName !=''  ">
+            and user_name like CONCAT('%', #{userName},'%')
+        </if>
+
+        <if test="roleName != null and roleName !=''  ">
+            and user_account like CONCAT('%', #{userAccount},'%')
+        </if>
+
+        <if test="sex != null and sex !=''  ">
+            and user_sex =#{sex}
+        </if>
+
+    </sql>
+
+
+
+    <!-- 配置查询所有操作 -->
+    <select id="findAll" resultType="Map" >
+        select <include refid="columnList"></include>
+             from sys_user
+        <where>
+            is_delete = 0
+            <include refid="queryCondition"></include>
+        </where>
+        order by create_time
+        <if test="limit != null and limit !=''  ">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from sys_user
+
+        <where>
+            is_delete = 0
+            <include refid="queryCondition"></include>
+        </where>
+    </select>
+
+    <!--登录用-->
+    <select id="findUserByPassword" resultType="Map" >
+        select <include refid="columnList"></include>
+        from sys_user
+        <where>
+            is_delete = 0 and user_account =#{userAccount}
+            and user_password = #{userPassword}
+        </where>
+            limit 1
+    </select>
+
+    <update id="updateState" parameterType="Map" >
+        update sys_user set user_state = #{userState} where vid = #{vid}
+    </update>
+
+    <insert id="userRigister" parameterType="Map">
+        insert into sys_user (vid,create_time,user_account,user_password,user_state)
+        values(#{vid},now(),#{userAccount},#{userPassword},0)
+    </insert>
+
+
+</mapper>
