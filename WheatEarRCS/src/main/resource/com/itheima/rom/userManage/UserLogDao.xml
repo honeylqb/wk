@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserLogDao">
+    <sql id="columnList">
+        vid vid,
+        user_id userId,
+        explorer_name explorerName,
+        explorer_var explorerVar,
+        concat(IFNULL(explorer_name,''),' ',IFNULL(explorer_var,'')) as explorer,
+        os_name OSName,
+        os_ver OSVer,
+        concat(IFNULL(os_name,''),' ',IFNULL(os_ver,'')) as OS,
+        login_port loginPort,
+        login_ip  loginIp,
+         concat(IFNULL(login_ip,''),':',IFNULL(login_port,'')) as ipPort,
+       <![CDATA[date_format(login_time,'%Y-%m-%d %H:%i:%s')]]> loginTime,
+       <![CDATA[date_format(exit_time,'%Y-%m-%d %H:%i:%s')]]>  exitTime
+
+    </sql>
+
+
+    <insert id="addUserLog" parameterType="Map">
+        insert into login_user_log (vid,user_id,explorer_name,explorer_var,os_name,os_ver,login_port,login_ip,login_time)
+        values(#{vid},#{userId},#{explorerName},#{explorerVar},#{OSName},#{OSVer},#{loginPort},#{loginIp},now())
+    </insert>
+
+
+
+
+
+
+    <!-- 配置查询所有操作 -->
+    <select id="findUserLoginLog" resultType="Map" >
+        select <include refid="columnList"></include>
+             from login_user_log
+        <where>
+            user_id = #{userId}
+        </where>
+        order by login_time desc
+        <if test="limit != null and limit !=''  ">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="countUserLoginLog" resultType="int">
+        select count(1) from login_user_log
+
+        <where>
+            user_id = #{userId}
+        </where>
+        <if test="limit != null and limit !=''  ">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!--登录用-->
+    <select id="findUserByPassword" resultType="Map" >
+        select <include refid="columnList"></include>
+        from sys_user
+        <where>
+            is_delete = 0 and user_account =#{userAccount}
+            and user_password = #{userPassword}
+        </where>
+            limit 1
+    </select>
+
+    <update id="updateState" parameterType="Map" >
+        update sys_user set user_state = #{userState} where vid = #{vid}
+    </update>
+
+
+
+    <update id="reSetPassword" parameterType="Map" >
+        update sys_user set   user_password =#{userPassword} where vid = #{vid}
+    </update>
+
+
+
+</mapper>

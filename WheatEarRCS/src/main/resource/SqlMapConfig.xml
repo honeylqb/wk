@@ -22,8 +22,10 @@
 <!--        <package name="com.itheima.dao"/>-->
         <mapper resource="com/itheima/rom/wheatImage/WheatImageDao.xml"/>
         <mapper resource="com/itheima/rom/userManage/UserManageDao.xml"/>
+        <mapper resource="com/itheima/rom/userManage/UserLogDao.xml"/>
         <mapper resource="com/itheima/rom/MenuManage/MenuManage.xml"/>
         <mapper resource="com/itheima/rom/RoleManage/RoleManage.xml"/>
         <mapper resource="com/itheima/rom/BaseInfo.xml"/>
+
     </mappers>
 </configuration>

@@ -2,6 +2,7 @@ package com.itheima.controller;
 
 import com.itheima.service.MenuManageService;
 import com.itheima.service.RoleManageService;
+import com.itheima.utils.LayuiResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Title: AccountController
@@ -63,4 +66,66 @@ public class RoleManageController {
     }
 
 
+
+    @RequestMapping(path = "/addRole.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object login(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("RoleManageController.addRole.do map:"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+        Object result = roleManageService.addRole(map);
+
+        return result;
+
+    }
+
+    @RequestMapping(path = "/findRoleMenuById.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object findRoleMenuById(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("RoleManageController.findRoleMenuById.do map:"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+
+        Set<String> menuSet = roleManageService.findRoleMenuById(map);
+
+        List<Map<String,Object>> menuList =  (List<Map<String,Object>>)request.getSession().getAttribute("menuList");
+        if(menuList!=null){
+            for(Map<String,Object> tempMap: menuList){
+                if(menuSet.contains(tempMap.get("vid"))){
+                    tempMap.put("checked", "true");
+                }else{
+                    tempMap.put("checked", "fa");
+                }
+                List<Map<String,Object>> childDataList = (List<Map<String,Object>>)tempMap.get("childData");
+                if(!childDataList.isEmpty()){
+                    for(Map<String,Object> teMap :childDataList){
+                        if(menuSet.contains(teMap.get("vid"))){
+                            teMap.put("checked", "true");
+                        }else{
+                            teMap.put("checked", "fa");
+                        }
+                    }
+                }
+
+            }
+        }
+        map.put("menuList",menuList);
+        System.out.println("RoleManageController.findRoleMenuById出参"+map);
+        request.getSession().setAttribute("roleEdit", map);
+
+        return LayuiResult.ok();
+
+    }
+
+    @RequestMapping(path = "/updateRole.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object updateRole(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("RoleManageController.updateRole.do map:"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+        Object result = roleManageService.updateRole(map);
+
+        return result;
+
+    }
 }

@@ -9,7 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/lib/layui-v2.5.4/css/layui.css" media="all">
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/css/public.css" media="all">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/src/layui/X-admin/js/xadmin.js"></script>
 </head>
 <body>
 <div class="layuimini-container">
@@ -71,10 +73,10 @@
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'vid', width: 80, title: 'ID', sort: true},
                 {field: 'userName', width: 80, title: '用户名'},
-                {field: 'userSex', width: 80, title: '性别', sort: true},
+                //{field: 'userSex', width: 80, title: '性别', sort: true},
                 //{field: 'city', width: 80, title: '城市'},
-                {field: 'userAccount', title: '签名', minWidth: 150},
-                {field: 'userAddr', width: 80, title: '地址', sort: true},
+                {field: 'userAccount', title: '账号', minWidth: 150},
+                {field: 'email', width: 80, title: 'email', sort: true},
                 {field: 'userPhone', width: 80, title: '手机号', sort: true},
                 {field: 'userState', width: 80, title: '状态',
                     templet:function(data){
@@ -120,7 +122,17 @@
 
         // 监听添加操作
         $(".data-add-btn").on("click", function () {
-            layer.msg('添加数据');
+           // layer.msg('添加数据');
+
+
+            xadmin.open('添加用户','${pageContext.request.contextPath}/page/back/page/user-add.jsp',600,400);
+            table.reload('currentTableId', {
+                where: {}
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            }); //只重载数据
+
         });
 
         // 监听删除操作
@@ -138,7 +150,31 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                //layer.alert('编辑行：<br>' + JSON.stringify(data))
+                //发送请求
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/UserManageController/findUserRoleById.do",
+                    data:JSON.stringify(data),
+                    type:"post",
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success:function(data){
+                        console.log(data);
+                        console.log(data.data);
+                        //alert();
+                        var da = data;
+                        if(data.code == 0){
+                            //成功后弹出
+                            xadmin.open('编辑用户信息','${pageContext.request.contextPath}/page/back/page/user-edit.jsp',600,400);
+
+                        }else{
+                            layer.msg(data.msg);
+                            flag = true;
+                        }
+                    }
+                });
+
+
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
                     obj.del();

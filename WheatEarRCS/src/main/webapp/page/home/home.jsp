@@ -21,8 +21,8 @@ pageEncoding="utf-8" isELIgnored="false" %>
           <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script>
-            // 是否开启刷新记忆tab功能
-            // var is_remember = false;
+            是否开启刷新记忆tab功能
+            var is_remember = false;
         </script>
         <style type="text/css">
             .topHead{
@@ -241,13 +241,19 @@ pageEncoding="utf-8" isELIgnored="false" %>
         <div class="left-nav topHead" >
             <div id="side-nav">
                 <ul id="nav">
-                    <c:forEach items="${menuList}" var="parent">
+                    <c:forEach items="${loginUserInfo.menuList}" var="parent">
                         <li>
-                            <a href="javascript:;">
+                            <c:if test="${ empty parent.childData}">
+                            <a onclick="xadmin.add_tab('${parent.menuName}','${pageContext.request.contextPath}${parent.menuLink}')">
                                 <i class="iconfont left-nav-li" lay-tips="${parent.menuName}">${parent.menuIcon}</i>
                                 <cite>${parent.menuName}</cite>
-                                <i class="iconfont nav_right">&#xe697;</i></a>
+                                </a>
+                            </c:if>
                             <c:if test="${not empty parent.childData}">
+                                <a href="javascript:;">
+                                    <i class="iconfont left-nav-li" lay-tips="${parent.menuName}">${parent.menuIcon}</i>
+                                    <cite>${parent.menuName}</cite>
+                                    <i class="iconfont nav_right">&#xe697;</i></a>
                                 <c:forEach items="${parent.childData}" var="childData">
                                     <ul class="sub-menu">
                                         <li>

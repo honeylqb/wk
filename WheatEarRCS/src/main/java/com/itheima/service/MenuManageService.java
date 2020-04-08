@@ -20,6 +20,8 @@ public interface MenuManageService {
 
     public Object showNavigation();
 
+    public Object findUserMenuTree( Map<String,Object> map);
+
   //  public void saveAccount(Account account);
 
     //public List<Map<String,Object>> find();

@@ -1,9 +1,13 @@
 package com.itheima.controller;
 
 import com.itheima.service.MenuManageService;
+import com.itheima.service.RoleManageService;
 import com.itheima.service.UserManageService;
 import com.itheima.service.WheatImageService;
+import com.itheima.utils.ClientInfo;
+import com.itheima.utils.CountUtil;
 import com.itheima.utils.LayuiResult;
+import com.itheima.utils.UUIDUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,9 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Title: AccountController
@@ -34,6 +36,9 @@ public class UserManageController {
 
     @Autowired
     private MenuManageService menuManageService;
+
+    @Autowired
+    private RoleManageService roleManageService;
 
 
     @RequestMapping(path = "/findAll.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
@@ -75,6 +80,8 @@ public class UserManageController {
         System.out.println("condition:"+condition.toString());
         Object result = userManageService.findAll(condition);
 
+        List<Map<String,Object>> roleInfo = roleManageService.findRoleInfo(condition);
+        request.getSession().setAttribute("roleInfo",roleInfo);
         System.out.println("UserManageController.findAll.do出参："+result.toString());
         return result;
     }
@@ -83,7 +90,13 @@ public class UserManageController {
     @ResponseBody
     public Object login(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
         System.out.println(map.toString());
-        List<Map<String,Object>> list = userManageService.findUserByPassword(map);
+        List<Map<String,Object>> list =null;
+        try {
+             list = userManageService.findUserByPassword(map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         if(list.isEmpty()){
             return LayuiResult.error("用户名或密码错误");
         }else{
@@ -92,11 +105,55 @@ public class UserManageController {
             model.addAttribute("loginUserInfo",loginUserInfo);
             request.getSession().setAttribute("loginUserInfo", loginUserInfo);
 
-            Object result = menuManageService.showMenuTree();
-            request.getSession().setAttribute("menuList",result);
+            System.out.println("登录总人数+"+CountUtil.addLoginTotal());
+            //查找该用户所对应的权限
+//            Object result = menuManageService.showMenuTree();
+//            request.getSession().setAttribute("menuList",result);
+
+            //Object result = menuManageService.findUserMenuTree(loginUserInfo);
+
 
             Object navigationList = menuManageService.showNavigation();
             request.getSession().setAttribute("NavigationData",navigationList);
+
+            Map<String,Object> logMap  = ClientInfo.getClientInfo(request.getHeader("user-agent"));
+
+
+            //获取IP
+            String remoteAddr = request.getRemoteAddr();
+            String forwarded = request.getHeader("X-Forwarded-For");
+            String realIp = request.getHeader("X-Real-IP");
+
+            String ip = null;
+            if (realIp == null) {
+                if (forwarded == null) {
+                    ip = remoteAddr;
+                } else {
+                    ip = remoteAddr + "/" + forwarded.split(",")[0];
+                }
+            } else {
+                if (realIp.equals(forwarded)) {
+                    ip = realIp;
+                } else {
+                    if(forwarded != null){
+                        forwarded = forwarded.split(",")[0];
+                    }
+                    ip = realIp + "/" + forwarded;
+                }
+            }
+            logMap.put("loginIp",ip);
+            logMap.put("loginPort",request.getRemotePort());    //端口
+            logMap.put("vid", UUIDUtils.getId());
+            logMap.put("userId", loginUserInfo.get("vid"));
+            userManageService.addloginLog(logMap);
+            System.out.println("loginIp"+ip);
+            System.out.println("loginPort"+request.getRemotePort());
+            System.out.println("sessionId"+request.getSession().getId());
+
+
+
+
+
 
             return LayuiResult.ok(1,"登录成功",list);
         }
@@ -135,6 +192,108 @@ public class UserManageController {
         Object result = userManageService.userRigister(map);
 
         return result;
+    }
+
+    @RequestMapping(path = "/reSetPassword.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object reSetPassword(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println(map.toString());
+        Map<String,Object> loginUserInfo = (Map<String,Object>)  request.getSession().getAttribute("loginUserInfo");
+        if(loginUserInfo == null){
+            return LayuiResult.error("登录信息已经失效！");
+        }
+
+        if(map.containsKey("oldPassword")){
+            if(!map.get("oldPassword").equals(loginUserInfo.get("userPassword"))){
+                return LayuiResult.error("旧密码输入错误！！！");
+            }
+        }
+        System.out.println("---------------------");
+        map.put("vid", loginUserInfo.get("vid"));
+        Object result = userManageService.reSetPassword(map);
+
+        return result;
+    }
+
+
+    @RequestMapping(path = "/findUserLoginLog.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object findUserLoginLog(Model model, HttpServletRequest request){
+        System.out.println("wheatImageController.findAll.do");
+        Map<String,Object> condition = new HashMap<>();
+        int page = Integer.parseInt(request.getParameter("page"));
+        int limit = Integer.parseInt(request.getParameter("limit"));
+        condition.put("start", (page - 1) * limit);
+
+        condition.put("limit", limit);
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        condition.put("userId", loginUserInfo.get("vid"));
+        System.out.println("condition:"+condition.toString());
+        Object result = userManageService.findUserLoginLog(condition);
+
+
+
+        return result;
+    }
+
+    @RequestMapping(path = "/addUser.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object addUser(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("/addUser.do"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+        Object result = userManageService.addUser(map);
+
+        return result;
+    }
+
+    @RequestMapping(path = "/findUserRoleById.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object findUserRoleById(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("UserManageController.findUserRoleById.do map:"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+
+        Set<String> RoleSet = userManageService.findUserRoleById(map);
+
+        List<Map<String,Object>> roleInfo =  (List<Map<String,Object>>)request.getSession().getAttribute("roleInfo");
+        if(roleInfo!=null){
+            for(Map<String,Object> tempMap: roleInfo){
+                if(RoleSet.contains(tempMap.get("vid"))){
+                    tempMap.put("checked", "true");
+                }else{
+                    tempMap.put("checked", "fa");
+                }
+        }
+        }
+        map.put("roleInfo",roleInfo);
+        System.out.println("RoleManageController.findUserRoleById"+map);
+        request.getSession().setAttribute("userRoleEdit", map);
+
+        return LayuiResult.ok();
+
+    }
+
+    @RequestMapping(path = "/updateUser.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object updateUser(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("UserManageController.updateUser.do map:"+map.toString());
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        map.put("userId", loginUserInfo.get("vid"));
+        Object result = userManageService.updateUser(map);
+
+        return result;
+
+    }
+
+    @RequestMapping(path = "/findUserMenuList.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object findUserMenuList(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        Object result = menuManageService.showMenuTree();
+        request.getSession().setAttribute("menuList",result);
+
+        return LayuiResult.ok();
+
     }
 
 }

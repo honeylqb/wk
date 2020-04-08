@@ -43,6 +43,10 @@ public class LoginFilter implements Filter {
 		String rootPath = request.getContextPath();
 		System.out.println(rootPath);
         String requestUrl = request.getRequestURI();
+        if(requestUrl.contains("home")&&requestUrl.contains("back")){
+            chain.doFilter(request, response);
+            return;
+        }
         Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
 
         if(loginUserInfo!=null){
@@ -50,50 +54,82 @@ public class LoginFilter implements Filter {
             if(loginUserInfo.containsKey("roleList")){
                 roleList = (List<Map<String,Object>>)loginUserInfo.get("roleList");
                 if(roleList == null ||roleList.isEmpty()){
-                    request.setAttribute("Msg", "对不起，您无权访问！");
+                    request.setAttribute("Msg", "对不起，您无角色信息无权访问！");
                     request.getRequestDispatcher("/index.jsp").forward(request, response);
                     //response.sendRedirect(rootPath+"/index.jsp");
                     return;
                 }else{
+                    //
 
-
-                    if(requestUrl.contains("home")){
-
-                        for(Map<String,Object> role :roleList) {
-
-                            if("2".equals(role.get("roleType")) ){
-
+                    List<Map<String,Object>>  Menulist = (List<Map<String,Object>>)loginUserInfo.get("Menulist");
+                    if(Menulist.isEmpty()){
+                        request.setAttribute("Msg", "对不起，您无权访问！");
+                        request.getRequestDispatcher("/index.jsp").forward(request, response);
+                    }
+                    for(Map<String,Object> menuMap :Menulist){
+                        if(menuMap.get("menuLink")!=null){
+                            if(requestUrl.contains((String)menuMap.get("menuLink"))){
                                 chain.doFilter(request, response);
                                 return;
                             }
-
                         }
+
+                    }
+
+                    List<Map<String,Object>>  NavigationData = (List<Map<String,Object>>)request.getSession().getAttribute("NavigationData");
+                    for(Map<String,Object> navig :NavigationData){
+                        if(navig.get("menuLink")!=null){
+                            if(requestUrl.contains((String)navig.get("menuLink"))){
+                                chain.doFilter(request, response);
+                                return;
+                            }
+                        }
+
+
+                    }
+
                         request.setAttribute("Msg", "对不起，您无权访问！");
                         //response.sendRedirect(rootPath+"/index.jsp");
                         request.getRequestDispatcher("/index.jsp").forward(request, response);
                         return;
-                    }else if(requestUrl.contains("back")){
 
-                        System.out.println("back");
-
-                        for(Map<String,Object> role :roleList) {
-
-                            if("1".equals(role.get("roleType")) ){
-                                System.out.println("back"+role.toString());
-                                chain.doFilter(request, response);
-                                return;
-
-                            }
-
-                        }
-                        request.setAttribute("Msg", "对不起，您无权访问！");
-                       // response.sendRedirect(rootPath+"/page/login/login-1.jsp");
-                        request.getRequestDispatcher("/page/login/login-1.jsp").forward(request, response);
-                        return;
-
-
-                    }
-                    chain.doFilter(request, response);
+//                    if(requestUrl.contains("home")){
+//
+//                        for(Map<String,Object> role :roleList) {
+//
+//                            if("2".equals(role.get("roleType")) ){
+//
+//                                chain.doFilter(request, response);
+//                                return;
+//                            }
+//
+//                        }
+//                        request.setAttribute("Msg", "对不起，您无权访问！");
+//                        //response.sendRedirect(rootPath+"/index.jsp");
+//                        request.getRequestDispatcher("/index.jsp").forward(request, response);
+//                        return;
+//                    }else if(requestUrl.contains("back")){
+//
+//                        System.out.println("back");
+//
+//                        for(Map<String,Object> role :roleList) {
+//
+//                            if("1".equals(role.get("roleType")) ){
+//                                System.out.println("back"+role.toString());
+//                                chain.doFilter(request, response);
+//                                return;
+//
+//                            }
+//
+//                        }
+//                        request.setAttribute("Msg", "对不起，您无权访问！");
+//                       // response.sendRedirect(rootPath+"/page/login/login-1.jsp");
+//                        request.getRequestDispatcher("/page/login/login-1.jsp").forward(request, response);
+//                        return;
+//
+//
+//                    }
+                    //chain.doFilter(request, response);
 
 
                 }
@@ -110,12 +146,9 @@ public class LoginFilter implements Filter {
         }else{
             System.out.println("---!!!!-----无登录信息转login-----------"+request.getRequestURI());
             //request.getRequestDispatcher("../login.jsp").forward(request, response);
-            if(requestUrl.contains("home")){
-                response.sendRedirect(rootPath+"/page/login/login-2.jsp");
-            }else if(requestUrl.contains("back")){
-                System.out.println("back");
-                response.sendRedirect(rootPath+"/page/login/login-1.jsp");
-            }
+
+            response.sendRedirect(rootPath+"/page/login/login-2.jsp");
+
         }
 
 

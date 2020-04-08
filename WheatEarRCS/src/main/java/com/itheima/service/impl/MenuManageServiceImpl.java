@@ -71,4 +71,13 @@ public class MenuManageServiceImpl implements MenuManageService {
         }
         return parentlist;
     }
+
+    @Override
+    public Object findUserMenuTree(Map<String,Object> map) {
+
+
+        return null;
+    }
+
+
 }

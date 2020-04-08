@@ -66,5 +66,65 @@
 
     </select>
 
+    <insert id="addRole" parameterType="Map">
+        insert into sys_role (vid,role_name,role_code,role_type,role_desc,create_time,create_user)
+        values(#{vid},#{roleName},#{roleCode}#{roleType},#{roleDesc},now(),#{userId})
+    </insert>
+
+    <insert id="addRoleMenu" parameterType="Map">
+        insert into sys_role_menu
+        (vid,menu_id,role_id,create_time,create_user)
+        
+        values
+        <foreach collection="tempMapList" item="item" separator="," open="" close="">
+            (#{item.vid},#{item.menuId},#{vid},now(),#{userId})
+        </foreach>
+        
+
+    </insert>
+    <select id="findRoleMenuById" resultType="Map">
+            select menu_id as menuId
+        from sys_role_menu
+        where role_id = #{vid}
+    </select>
+
+
+    <update id="updateRole" parameterType="Map" >
+        update sys_role set
+          role_name =#{roleName} ,role_type  =#{roleType},
+          role_desc = #{roleDesc}  , update_user =#{userId},
+          update_time = now()
+
+          where vid = #{vid}
+          </update>
+
+    <delete id="deleteRoleMenu" parameterType="Map">
+        delete from sys_role_menu
+        where role_id = #{vid}
+
+    </delete>
+    <select id="findUserMenuTree" resultType="Map">
+        select <include refid="MenuManageInfo.columnList"></include> from sys_menu
+        <where>
+
+
+         vid in(
+
+
+                 select distinct menu_id as menuId from sys_role_menu
+
+                    <where>
+                        is_delete = 0
+                        and
+                        role_id in
+                        <foreach collection="rolelist" item="item" separator="," open="(" close=")">
+                            #{item.vid}
+                        </foreach>
+                    </where>
+        )
+        and is_delete = 0
+        </where>
+    </select>
+
 
 </mapper>

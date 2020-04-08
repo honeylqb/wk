@@ -73,7 +73,7 @@
                                     type="checkbox" name="agreement" lay-skin="primary" title="" checked="">
                                 <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><i
                                         class="layui-icon layui-icon-ok"></i></div>
-                                <a href="/instructions/terms.html" target="_blank"
+                                <a href="${pageContext.request.contextPath}/page/main/construct.jsp" target="_blank"
                                    style="position: relative; top: 4px; left: 5px; color: #999;">同意用户服务条款</a></div>
                             <div class="layui-form-item">
                                 <button class="layui-btn"  lay-submit=""  lay-filter="formDemo">立即注册</button>
@@ -104,18 +104,20 @@
             elem: '#slider'
         })
         console.log("save111111--");
-        var flag = true;
+        var flag = false;
         //监听提交
         form.on('submit(formDemo)', function (data) {
             console.log("1----");
             if (slider.isOk()) {//用于表单验证是否已经滑动成功
                 //layer.msg(JSON.stringify(data.field));
                 console.log("2----");
-
+                flag = true;
                 if ($("#L_pass").val() != $("#L_repass").val()) {
                     layer.msg("两次密码输入不一样");
+                    flag = false;
                     return false;
                 }
+
                 if(flag){
                     rigister();
                 }
@@ -160,6 +162,7 @@
 
                    }else{
                        layer.msg(data.msg);
+                       flag = true;
                    }
                }
            });

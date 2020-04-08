@@ -10,7 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/lib/layui-v2.5.4/css/layui.css" media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/css/public.css" media="all">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/src/layui/X-admin/js/xadmin.js"></script>
 </head>
+
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
@@ -43,7 +45,8 @@
         </fieldset>
 
         <div class="layui-btn-group">
-            <button class="layui-btn data-add-btn">添加</button>
+            <button class="layui-btn data-add-btn" ><i class="layui-icon"></i>添加</button>
+            <button class="layui-btn ">添加</button>
             <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
         </div>
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
@@ -81,9 +84,9 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
+            // layer.alert(result, {
+            //     title: '最终的搜索信息'
+            // });
 
             //执行搜索重载
             table.reload('currentTableId', {
@@ -103,8 +106,43 @@
 
         // 监听添加操作
         $(".data-add-btn").on("click", function () {
-            layer.msg('添加数据');
+            $.ajax({
+                url:"${pageContext.request.contextPath}/RoleManageController/findUserMenuList.do",
+                //data:,
+                type:"post",
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                success:function(data){
+                    console.log(data);
+                    console.log(data.data);
+                    //alert();
+                    var da = data;
+                    if(data.code == 0){
+                        //成功后弹出
+                        xadmin.open('添加角色','${pageContext.request.contextPath}/page/back/page/role-add.jsp',600,400);
+
+
+                    }else{
+                        layer.msg(data.msg);
+                        flag = true;
+                    }
+                }
+            });
+
+
+            //layer.msg('添加数据');
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+
+                }
+            });
         });
+
 
         // 监听删除操作
         $(".data-delete-btn").on("click", function () {
@@ -121,7 +159,34 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                //layer.alert('编辑行：<br>' + JSON.stringify(data));
+                //发送请求
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/RoleManageController/findRoleMenuById.do",
+                    data:JSON.stringify(data),
+                    type:"post",
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success:function(data){
+                        console.log(data);
+                        console.log(data.data);
+                        //alert();
+                        var da = data;
+                        if(data.code == 0){
+                            //成功后弹出
+                            xadmin.open('编辑角色','${pageContext.request.contextPath}/page/back/page/role-edit.jsp',600,400);
+
+
+
+                        }else{
+                            layer.msg(data.msg);
+                            flag = true;
+                        }
+                    }
+                });
+
+                // edit(data);
+
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
                     obj.del();

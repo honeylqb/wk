@@ -36,10 +36,10 @@ public class WheatImageController {
     public Object findAll(Model model, HttpServletRequest request){
         logger.info("request:++++++++++++++++"+request);
         System.out.println("'wheatImageController.findAll.do入参:"+request);
-        List<Map<String,Object>> list = wheatImageService.findAll();
+        Object list = wheatImageService.findAll();
         System.out.println("list:"+list);
         model.addAttribute("list",list);
-        logger.info("list:++++++++++++++++"+list);
+
         return LayuiResult.ok(1, list);
     }
 

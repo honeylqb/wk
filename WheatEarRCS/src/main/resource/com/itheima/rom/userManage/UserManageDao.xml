@@ -18,6 +18,7 @@
         user_phone userPhone,
         user_state userState,
         province_code provinceCode,
+        email email,
         remark
 
     </sql>
@@ -62,6 +63,15 @@
         </where>
     </select>
 
+    <select id="findAccount" resultType="int">
+        select count(1) from sys_user
+
+        <where>
+            is_delete = 0
+           and  user_account = #{userAccount}
+        </where>
+    </select>
+
     <!--登录用-->
     <select id="findUserByPassword" resultType="Map" >
         select <include refid="columnList"></include>
@@ -82,5 +92,49 @@
         values(#{vid},now(),#{userAccount},#{userPassword},0)
     </insert>
 
+    <insert id="addUser" parameterType="Map">
+        insert into sys_user (vid,create_time,user_name,user_account,user_password,user_state,user_phone,email)
+        values(#{vid},now(),#{userName},#{userAccount},#{userPassword},0,#{userPhone},#{email})
+    </insert>
+
+
+    <update id="reSetPassword" parameterType="Map" >
+        update sys_user set   user_password =#{userPassword} where vid = #{vid}
+    </update>
+
+
+    <insert id="addUserRole" parameterType="Map">
+        insert into sys_user_role
+        (vid,role_id,user_id,create_time,create_user)
+
+        values
+        <foreach collection="tempMapList" item="item" separator="," open="" close="">
+            (#{item.vid},#{item.roleId},#{vid},now(),#{userId})
+        </foreach>
+
+
+    </insert>
+
+    <select id="findUserRoleById" resultType="Map">
+            select role_id as roleId
+        from sys_user_role
+        where user_id = #{vid}
+    </select>
+
+    <update id="updateUser" parameterType="Map" >
+        update sys_user set
+          user_name =#{userName},
+          user_phone =#{userPhone},
+          email =#{email},
+           update_user =#{userId},
+           update_time = now()
+          where vid = #{vid}
+    </update>
+
+    <delete id="deleteUserRole" parameterType="Map">
+        delete from sys_user_role
+        where user_id = #{vid}
+
+    </delete>
 
 </mapper>

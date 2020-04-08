@@ -22,7 +22,7 @@
                         <div class="layui-form-item"><input type="hidden" name="secret"
                                                             value="%E9%98%B2%E6%AD%A2%E5%B9%BF%E5%91%8A%E7%8B%97683316">
                             <label for="L_username" class="layui-form-label">旧密码</label>
-                            <div class="layui-input-inline"><input type="text" id="username" name="username"
+                            <div class="layui-input-inline"><input type="text" id="oldPassword" name="oldPassword"
                                                                    required="" lay-verify="required" placeholder="请输入账号"
                                                                    autocomplete="off" class="layui-input"></div>
                             <div class="layui-form-mid layui-word-aux"></div>
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="layui-form-item">
-                            <button class="layui-btn"  lay-submit=""  lay-filter="formDemo">提交</button>
+                            <button class="layui-btn"  lay-submit=""  lay-filter="formDemo" id ="formDemo">提交</button>
                         </div>
 
                     </form>
@@ -53,21 +53,76 @@
     </div>
     <%@include file="../../main/footer.jsp" %>
 </div>
-
-<script src="${pageContext.request.contextPath}/src/layui/layuimini/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
-<script src="${pageContext.request.contextPath}/src/layui/layuimini/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
-<script src="${pageContext.request.contextPath}/src/layui/layuimini/lib/jq-module/zyupload/zyupload-1.0.0.min.js" charset="utf-8"></script>
+<script src="${pageContext.request.contextPath}/src/layui/layuimini/lib/layui-v2.5.4/layui.all.js"></script>
+<script src="${pageContext.request.contextPath}/src/layui/layuimini/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/src/js/sliderVerify/sliderVerify.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/src/layui/X-admin/js/xadmin.js"></script>
 <script type="text/javascript">
-    layui.use('layer','form', function () { //独立版的layer无需执行这一句
-        var $ = layui.jquery,
-            layer = layui.layer; //独立版的layer无需执行这一句
-
+    layui.config({
+        base: '${pageContext.request.contextPath}/src/js/sliderVerify/'
+    }).use(['sliderVerify', 'jquery', 'form'], function () {
+        var sliderVerify = layui.sliderVerify,
             form = layui.form;
 
+        console.log("save111111--");
+        var flag = true;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            console.log("1----");
+
+                //layer.msg(JSON.stringify(data.field));
+                console.log("2----");
+
+                if ($("#L_pass").val() != $("#L_repass").val()) {
+                    layer.msg("两次新密码输入不一样");
+                    return false;
+                }
+                if(flag){
+                    reSetPassword();
+                }
+            console.log("3----");
+            return false;
+
+            // break;
+        });
+
+        // $("#btnSave").css("pointer-events","none");
+        var reSetPassword =  function(){
+            flag = false;
+            console.log("save------");
+            $.ajax({
+                url:"${pageContext.request.contextPath}/UserManageController/reSetPassword.do",
+                data:JSON.stringify({"oldPassword":$("#oldPassword").val(),"userPassword":$("#L_pass").val(),"rePassword":$("#L_repass").val()}),
+                type:"post",
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                success:function(data){
+                    console.log(data);
+                    console.log(data.data);
+                    //alert();
+                    var da = data;
+                    if(data.code == 0){
+
+                        layer.msg(data.msg);
+
+                      //  window.location = '../login/login-2.jsp';
 
 
-    });
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                    flag = true;
+                }
+            });
+
+        }
+
+
+    })
+
+
+
+
 </script>
 
 </body>

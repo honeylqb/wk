@@ -83,9 +83,8 @@
 		//监听提交
 		form.on('submit(formDemo)', function(data) {
 			if(slider.isOk()){//用于表单验证是否已经滑动成功
-				layer.msg(JSON.stringify(data.field));
+				//layer.msg(JSON.stringify(data.field));
 				console.log(JSON.stringify(data.field));
-
 				if(flag){
 					login();
 				}
@@ -95,6 +94,7 @@
 			}
 			return false;
 		});
+
 
 
 		//登录函数
@@ -119,6 +119,7 @@
 
 					}else{
 						layer.msg(data.msg);
+						 flag = true;
 					}
 				}
 			});
