@@ -115,6 +115,13 @@
 
     </insert>
 
+    <insert id="addUserDefaulRole" parameterType="Map">
+        insert into sys_user_role
+        (vid,role_id,user_id,create_time,create_user)
+        values
+            (#{vvid},'2',#{vid},now(),#{vid})
+    </insert>
+
     <select id="findUserRoleById" resultType="Map">
             select role_id as roleId
         from sys_user_role
@@ -136,5 +143,13 @@
         where user_id = #{vid}
 
     </delete>
+
+    <update id="updateUserInfo" parameterType="Map" >
+        update sys_user set
+          user_name =#{userName},
+           user_phone =#{userPhone}
+            email =#{email}
+           where vid = #{vid}
+    </update>
 
 </mapper>

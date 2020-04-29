@@ -8,7 +8,9 @@ import com.itheima.domain.Account;
 import com.itheima.service.UserManageService;
 import com.itheima.service.WheatImageService;
 import com.itheima.utils.LayuiResult;
+import com.itheima.utils.MD5Utils;
 import com.itheima.utils.UUIDUtils;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class UserManageServiceImpl implements UserManageService {
     @Override
     public List<Map<String,Object>> findUserByPassword(Map<String,Object> map) throws Exception{
         System.out.println("业务层。。UserManageServiceImpl.findUserByPassword");
+        map.put("userPassword", MD5Utils.md5((String)map.get("userPassword")));
         List<Map<String,Object>> list  = baseDao.queryForList("UserManageDao.findUserByPassword",map);
         if(!list.isEmpty()){
             Map<String,Object>  userMap=   list.get(0);
@@ -56,7 +59,7 @@ public class UserManageServiceImpl implements UserManageService {
                         List<Map<String,Object>> userMenuChildlist = new ArrayList<>();
                         for(Map<String,Object> tMap :Menulist){
 
-                            if(vid.equals(tMap.get("parentId"))){
+                            if(vid.equals(tMap.get("parentId"))&&"2".equals(tMap.get("menuType"))){
                                 userMenuChildlist.add(tMap);
                             }
                         }
@@ -92,6 +95,7 @@ public class UserManageServiceImpl implements UserManageService {
     }
     @Override
     public Object userRigister(Map<String,Object> map){
+
         int count = baseDao.getTotalCount("UserManageDao.findAccount",map);
 
         if(count>0){
@@ -99,7 +103,12 @@ public class UserManageServiceImpl implements UserManageService {
         }
 
        map.put("vid", UUIDUtils.getId());
+       map.put("userPassword",MD5Utils.md5((String)map.get("userPassword")) );
        int  num =  baseDao.insert("UserManageDao.userRigister",map );
+       //添加角色信息
+        System.out.println("添加默认角色信息");
+        map.put("vvid", UUIDUtils.getId());
+       int  num2 =  baseDao.insert("UserManageDao.addUserDefaulRole",map );
        if(num>0){
            return  LayuiResult.ok("注册成功！");
        }else{
@@ -112,6 +121,7 @@ public class UserManageServiceImpl implements UserManageService {
 
 
         System.out.println("业务层。。UserManageServiceImpl.reSetPassword");
+        map.put("userPassword",MD5Utils.md5((String)map.get("userPassword")) );
         int num = baseDao.update("UserManageDao.reSetPassword",map);
         if(num>0){
             return  LayuiResult.ok("修改成功");
@@ -155,7 +165,7 @@ public class UserManageServiceImpl implements UserManageService {
             return  LayuiResult.error("该账号已存在！");
         }
         map.put("vid", UUIDUtils.getId());
-
+        map.put("userPassword",MD5Utils.md5((String)map.get("userPassword")) );
         try {
             int  num =  baseDao.insert("UserManageDao.addUser",map );
 //            if(num>0){
@@ -166,20 +176,24 @@ public class UserManageServiceImpl implements UserManageService {
             //添加角色用户关系
             List<String> roleIdArrList = (List<String> )map.get("roleIdArr");
             System.out.println("roleIdArrList"+roleIdArrList.toString());
-            List<Map<String,Object>> tempMapList = new ArrayList<>();
-            for (String str :roleIdArrList){
-                Map<String,Object> tempMap = new HashMap<>();
-                tempMap.put("vid", UUIDUtils.getId());
-                tempMap.put("roleId", str);
+            if(!roleIdArrList.isEmpty()){
+                List<Map<String,Object>> tempMapList = new ArrayList<>();
+                for (String str :roleIdArrList){
+                    Map<String,Object> tempMap = new HashMap<>();
+                    tempMap.put("vid", UUIDUtils.getId());
+                    tempMap.put("roleId", str);
 
-                tempMapList.add(tempMap);
+                    tempMapList.add(tempMap);
+                }
+
+                map.put("tempMapList",tempMapList);
+                System.out.println("业务层。。UserManageDao.addUserRole"+map);
+                int result2 = baseDao.insert("UserManageDao.addUserRole",map);
+                System.out.println("业务层。。UserManageDao.addUserRole插入用户角色关系"+result2);
             }
 
-            map.put("tempMapList",tempMapList);
-            System.out.println("业务层。。UserManageDao.addUserRole"+map);
-            int result2 = baseDao.insert("UserManageDao.addUserRole",map);
 
-            System.out.println("业务层。。UserManageDao.addUserRole插入用户角色关系"+result2);
+
             return  LayuiResult.ok("添加成功！");
         }catch (Exception e){
             e.printStackTrace();
@@ -253,6 +267,19 @@ public class UserManageServiceImpl implements UserManageService {
             LayuiResult.error();
         }
         return  LayuiResult.ok("更新成功");
+    }
+
+    @Override
+    public Object updateUserInfo(Map<String,Object> map){
+
+
+        System.out.println("业务层。。UserManageServiceImpl.updateUserInfo");
+        int num = baseDao.update("UserManageDao.updateUserInfo",map);
+        if(num>0){
+            return  LayuiResult.ok("修改成功");
+        }else{
+            return  LayuiResult.error();
+        }
     }
 
 }

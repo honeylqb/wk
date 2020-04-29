@@ -79,6 +79,35 @@
         order by menu_order
     </select>
 
+    <insert id="addMenu" parameterType="Map">
+        insert into sys_menu
+        (vid,create_time,create_user,menu_name,menu_icon,menu_link,parent_id,menu_order,menu_type,is_enable)
+        values (#{vid},now(),#{userId},#{menuName},#{menuIcon},#{menuLink},#{parentId},#{menuOrder},#{menuType},#{isEnable})
+    </insert>
 
+    <!-- 配置查询所有操作 -->
+    <select id="findMenuParentSelect" resultType="Map" >
+        select <include refid="columnList"></include>
+        from sys_menu
+        <where>
+            is_delete = 0
+            and parent_id = '-1'
+            <if test="menuType != null and menuType !=''  ">
+                and menu_type = #{menuType}
+            </if>
+        </where>
+        order by menu_order
+    </select>
+
+    <update id="updateMenu" parameterType="Map" >
+        update sys_menu set
+          menu_name =#{menuName} ,menu_icon  =#{menuIcon},
+          parent_id  =#{parentId},menu_order  =#{menuOrder},
+           menu_type  =#{menuType},is_enable  =#{isEnable},
+          menu_link = #{menuLink}  , update_user =#{userId},
+          update_time = now()
+
+          where vid = #{vid}
+          </update>
 
 </mapper>

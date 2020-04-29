@@ -43,7 +43,7 @@ public class LoginFilter implements Filter {
 		String rootPath = request.getContextPath();
 		System.out.println(rootPath);
         String requestUrl = request.getRequestURI();
-        if(requestUrl.contains("home")&&requestUrl.contains("back")){
+        if(!requestUrl.contains("home")&&!requestUrl.contains("back")){
             chain.doFilter(request, response);
             return;
         }
@@ -60,6 +60,10 @@ public class LoginFilter implements Filter {
                     return;
                 }else{
                     //
+                    if(requestUrl.contains("-result.jsp")){
+                        chain.doFilter(request, response);
+                        return;
+                    }
 
                     List<Map<String,Object>>  Menulist = (List<Map<String,Object>>)loginUserInfo.get("Menulist");
                     if(Menulist.isEmpty()){
@@ -87,6 +91,8 @@ public class LoginFilter implements Filter {
 
 
                     }
+
+
 
                         request.setAttribute("Msg", "对不起，您无权访问！");
                         //response.sendRedirect(rootPath+"/index.jsp");

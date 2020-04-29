@@ -108,7 +108,7 @@
         $(".data-add-btn").on("click", function () {
             $.ajax({
                 url:"${pageContext.request.contextPath}/RoleManageController/findUserMenuList.do",
-                //data:,
+                data:JSON.stringify({"findUserMenuList":"findUserMenuList"}),
                 type:"post",
                 dataType:"json",
                 contentType: "application/json; charset=utf-8",
@@ -132,15 +132,15 @@
 
             //layer.msg('添加数据');
 
-            //执行搜索重载
-            table.reload('currentTableId', {
-                page: {
-                    curr: 1
-                }
-                , where: {
-
-                }
-            });
+            // //执行搜索重载
+            // table.reload('currentTableId', {
+            //     page: {
+            //         curr: 1
+            //     }
+            //     , where: {
+            //
+            //     }
+            // });
         });
 
 

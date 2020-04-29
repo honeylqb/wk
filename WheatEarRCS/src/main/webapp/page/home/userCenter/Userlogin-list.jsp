@@ -24,29 +24,7 @@
 
         <fieldset class="layui-elem-field layuimini-search">
             <legend>登录记录</legend>
-<%--            <div style="margin: 10px 10px 10px 10px">--%>
-<%--                <form class="layui-form layui-form-pane" action="">--%>
-<%--                    <div class="layui-form-item">--%>
-<%--                        <div class="layui-inline">--%>
-<%--                            <label class="layui-form-label">图片名称</label>--%>
-<%--                            <div class="layui-input-inline">--%>
-<%--                                <input type="text" name="imageName" autocomplete="off" class="layui-input">--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <div class="layui-inline">--%>
-<%--                            <label class="layui-form-label">小麦品种</label>--%>
-<%--                            <div class="layui-input-inline">--%>
-<%--                                <input type="text" name="wheatType" autocomplete="off" class="layui-input">--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
 
-
-<%--                        <div class="layui-inline">--%>
-<%--                            <a class="layui-btn" lay-submit="" lay-filter="data-search-btn">搜索</a>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </form>--%>
-<%--            </div>--%>
 
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>

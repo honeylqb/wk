@@ -2,6 +2,7 @@ package com.itheima.controller;
 
 import com.itheima.service.MenuManageService;
 import com.itheima.service.RoleManageService;
+import com.itheima.utils.Layui;
 import com.itheima.utils.LayuiResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,9 @@ public class RoleManageController {
 
     @Autowired
     private RoleManageService roleManageService;
+
+    @Autowired
+    private MenuManageService menuManageService;
 
     @RequestMapping(path = "/findAllRole.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
     @ResponseBody
@@ -70,12 +74,21 @@ public class RoleManageController {
     @RequestMapping(path = "/addRole.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
     @ResponseBody
     public Object login(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
-        System.out.println("RoleManageController.addRole.do map:"+map.toString());
-        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
-        map.put("userId", loginUserInfo.get("vid"));
-        Object result = roleManageService.addRole(map);
 
-        return result;
+        try {
+            System.out.println("RoleManageController.addRole.do map:"+map.toString());
+            Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+            map.put("userId", loginUserInfo.get("vid"));
+            Object  result = roleManageService.addRole(map);
+
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            return LayuiResult.error();
+        }
+
+
+
 
     }
 
@@ -126,6 +139,17 @@ public class RoleManageController {
         Object result = roleManageService.updateRole(map);
 
         return result;
+
+    }
+
+    @RequestMapping(path = "/findUserMenuList.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object findUserMenuList(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        System.out.println("RoleManageController.findUserMenuList.do map:"+map.toString());
+        Object result = menuManageService.showMenuTree();
+        request.getSession().setAttribute("menuList",result);
+
+        return LayuiResult.ok();
 
     }
 }

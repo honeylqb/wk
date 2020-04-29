@@ -103,8 +103,16 @@ public class FileUploadController {
         request.getSession().setAttribute("wheatImage", src);
         //放点坐标
 
+
         String name =  fileName.substring(0, fileName.indexOf(".")) ;
         System.out.println("分割的名字："+name);
+        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+        Map<String,Object> wheatImageMap = new HashMap<>();
+        wheatImageMap.put("userId", loginUserInfo.get("vid"));
+        wheatImageMap.put("imageName",name);
+        wheatImageMap.put("imagePath",src);
+        wheatImageMap.put("wheatType","1");
+        Object   wheatImageReInfoLog = null;
         Object wheatData = null;
         try {
             wheatData = wheatImageService.readWheatJson(name);
@@ -116,18 +124,31 @@ public class FileUploadController {
             System.out.println(e.toString());
             map.put("code", "-1");
             map.put("msg","识别失败");
+            wheatImageMap.put("isSuccess",1);
+            wheatImageReInfoLog = wheatImageService.wheatImageReInfoLog(wheatImageMap);
+            return map;
         }
-        Object metadataMap = null;
+        Map<String,Object> metadataMap = null;
         try {
-            metadataMap = wheatImageService.readmetadataJson(name);
+            metadataMap = ( Map<String,Object>)wheatImageService.readmetadataJson(name);
             request.getSession().setAttribute("metadata", metadataMap);
             System.out.println("metadata"+metadataMap.toString());
 
 
+            wheatImageMap.put("Ears",metadataMap.get("Ears"));
+            wheatImageMap.put("Spikelets",metadataMap.get("Spikelets"));
+            wheatImageMap.put("Awns",metadataMap.get("Awns"));
+            wheatImageMap.put("isSuccess",0);
+            wheatImageReInfoLog = wheatImageService.wheatImageReInfoLog(wheatImageMap);
+
         }catch (Exception e){
             System.out.println(e.toString());
+
             map.put("code", "-9999");
             map.put("msg","计数失败");
+            wheatImageMap.put("isSuccess",1);
+               wheatImageReInfoLog = wheatImageService.wheatImageReInfoLog(wheatImageMap);
+            e.printStackTrace();
         }
 
 

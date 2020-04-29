@@ -68,7 +68,7 @@
 
     <insert id="addRole" parameterType="Map">
         insert into sys_role (vid,role_name,role_code,role_type,role_desc,create_time,create_user)
-        values(#{vid},#{roleName},#{roleCode}#{roleType},#{roleDesc},now(),#{userId})
+        values(#{vid},#{roleName},#{roleCode},#{roleType},#{roleDesc},now(),#{userId})
     </insert>
 
     <insert id="addRoleMenu" parameterType="Map">
@@ -123,6 +123,7 @@
                     </where>
         )
         and is_delete = 0
+            order by menu_order
         </where>
     </select>
 

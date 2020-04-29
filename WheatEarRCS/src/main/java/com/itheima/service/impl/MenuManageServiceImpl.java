@@ -6,6 +6,7 @@ import com.itheima.domain.Account;
 import com.itheima.service.MenuManageService;
 import com.itheima.service.WheatImageService;
 import com.itheima.utils.LayuiResult;
+import com.itheima.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ public class MenuManageServiceImpl implements MenuManageService {
             for (Map<String,Object> parentMap :parentlist){
                 String parentId =  (String)parentMap.get("vid");
                 map.put("parentId",parentId);
+                map.put("menuType","");
                 List<Map<String,Object>> Childlist = baseDao.queryForList("MenuManageInfo.findParentOrChild",map);
                 parentMap.put("childData",Childlist);
             }
@@ -77,6 +79,39 @@ public class MenuManageServiceImpl implements MenuManageService {
 
 
         return null;
+    }
+
+    @Override
+    public Object addMenu(Map<String,Object> map) {
+        System.out.println("业务层。。MenuManageServiceImpl.addMenu--入map"+map);
+        map.put("vid", UUIDUtils.getId());
+       int num =  baseDao.insert("MenuManageInfo.addMenu",map);
+       if(num>0){
+           return LayuiResult.ok();
+       }else{
+           return LayuiResult.error();
+       }
+
+    }
+    @Override
+    public Object findMenuParentSelect(Map<String,Object> map) {
+        System.out.println("业务层。。MenuManageServiceImpl.findMenuParentSelect--入map"+map);
+
+        List<Map<String, Object>> result =  baseDao.queryForList("MenuManageInfo.findMenuParentSelect",map);
+        System.out.println("业务层。。MenuManageServiceImpl.findMenuParentSelect--出参"+result);
+        return result;
+    }
+
+    @Override
+    public Object updateMenu(Map<String,Object> map) {
+        System.out.println("业务层。。MenuManageServiceImpl.updateMenu--入map"+map);
+        int num =  baseDao.update("MenuManageInfo.updateMenu",map);
+        if(num>0){
+            return LayuiResult.ok();
+        }else{
+            return LayuiResult.error();
+        }
+
     }
 
 

@@ -32,6 +32,7 @@ public interface UserManageService {
 
     public Set<String> findUserRoleById(Map<String,Object> map);
     public Object updateUser(Map<String,Object> map);
+    public Object updateUserInfo(Map<String,Object> map);
 
 
 

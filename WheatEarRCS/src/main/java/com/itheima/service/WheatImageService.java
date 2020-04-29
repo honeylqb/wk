@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface WheatImageService {
 
-    public List<Map<String,Object>> findAll();
+    public Object findAll(Map<String,Object> map);
 
     public void saveAccount(Account account);
 
@@ -22,6 +22,8 @@ public interface WheatImageService {
 
     public Object readWheatJson(String path) throws Exception;
     public Object readmetadataJson(String path) throws Exception;
+
+    public Object wheatImageReInfoLog(Map<String,Object> map) ;
 
 
 }

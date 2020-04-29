@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>穗粒识别</title>
+    <title>个人信息</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/lib/layui-v2.5.4/css/layui.css" media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/lib/jq-module/zyupload/zyupload-1.0.0.min.css" media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/src/layui/layuimini/css/public.css" media="all">
@@ -13,29 +13,34 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
     <fieldset class="layui-elem-field layuimini-search">
-        <legend>重置密码</legend>
+        <legend>个人信息</legend>
     <div class="layuimini-main">
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
             <div class="layui-tab-item layui-show">
                 <div class="layui-form layui-form-pane">
                     <form method="post">
-                        <div class="layui-form-item"><input type="hidden" name="secret"
-                                                            value="%E9%98%B2%E6%AD%A2%E5%B9%BF%E5%91%8A%E7%8B%97683316">
-                            <label for="L_username" class="layui-form-label">旧密码</label>
-                            <div class="layui-input-inline"><input type="text" id="oldPassword" name="oldPassword"
-                                                                   required="" lay-verify="required" placeholder="请输入旧密码"
+                        <div class="layui-form-item"><input type="hidden" name="vid" id="vid"
+                                                            value="${loginUserInfo.vid}">
+                            <label for="userName" class="layui-form-label">用户姓名</label>
+                            <div class="layui-input-inline"><input type="text" id="userName" name="userName"
+                                                                   required="" lay-verify="required" value="${loginUserInfo.userName}"
                                                                    autocomplete="off" class="layui-input"></div>
                             <div class="layui-form-mid layui-word-aux"></div>
                         </div>
-                        <div class="layui-form-item"><label for="L_pass" class="layui-form-label">新密码</label>
-                            <div class="layui-input-inline"><input type="password" id="L_pass" name="pass"
-                                                                   required="" lay-verify="pass" placeholder="6到16个字符"
+                        <div class="layui-form-item"><label for="userAccount" class="layui-form-label">用户账号</label>
+                            <div class="layui-input-inline"><input  id="userAccount" name="userAccount" value="${loginUserInfo.userAccount}"
+                                                                   required="" lay-verify="required" readonly
                                                                    autocomplete="off" class="layui-input"></div>
                             <div class="layui-form-mid layui-word-aux"></div>
                         </div>
-                        <div class="layui-form-item"><label for="L_repass" class="layui-form-label">确认密码</label>
-                            <div class="layui-input-inline"><input type="password" id="L_repass" name="repass"
-                                                                   required="" lay-verify="repass"
+                        <div class="layui-form-item"><label for="userPhone" class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline"><input  id="userPhone" name="userPhone"
+                                                                   required="" lay-verify="phone" value="${loginUserInfo.userPhone}"
+                                                                   autocomplete="off" class="layui-input"></div>
+                        </div>
+                        <div class="layui-form-item"><label for="email" class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline"><input type="text" id="email" name="email"
+                                                                   required="" lay-verify="email" value="${loginUserInfo.email}"
                                                                    autocomplete="off" class="layui-input"></div>
                         </div>
 
@@ -63,6 +68,7 @@
     }).use(['sliderVerify', 'jquery', 'form'], function () {
         var sliderVerify = layui.sliderVerify,
             form = layui.form;
+        //自定义验证规则
         form.verify({
             nikename: function(value) {
                 if (value.length < 5) {
@@ -76,6 +82,7 @@
                 }
             }
         });
+
         console.log("save111111--");
         var flag = true;
         //监听提交
@@ -90,7 +97,7 @@
                     return false;
                 }
                 if(flag){
-                    reSetPassword();
+                    updateUserInfo();
                 }
             console.log("3----");
             return false;
@@ -99,12 +106,19 @@
         });
 
         // $("#btnSave").css("pointer-events","none");
-        var reSetPassword =  function(){
+        var updateUserInfo =  function(){
             flag = false;
+            var map =  {
+                "vid":$("#vid").val(),
+                "userName":$("#userName").val(),
+                "userPhone":$("#userPhone").val(),
+                "email":$("#email").val(),
+                "oldPassword":$("#oldPassword").val(),
+            }
             console.log("save------");
             $.ajax({
-                url:"${pageContext.request.contextPath}/UserManageController/reSetPassword.do",
-                data:JSON.stringify({"oldPassword":$("#oldPassword").val(),"userPassword":$("#L_pass").val(),"rePassword":$("#L_repass").val()}),
+                url:"${pageContext.request.contextPath}/UserManageController/updateUserInfo.do",
+                data:JSON.stringify(map),
                 type:"post",
                 dataType:"json",
                 contentType: "application/json; charset=utf-8",
@@ -117,7 +131,7 @@
 
                         layer.msg(data.msg);
 
-                      //  window.location = '../login/login-2.jsp';
+
 
 
                     }else{

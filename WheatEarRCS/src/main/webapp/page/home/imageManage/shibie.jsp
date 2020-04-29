@@ -18,7 +18,7 @@
         <![endif]-->
     </head>
     <body>
-        <button id="but" >打印</button>
+        <button id="but" class="layui-btn">打印</button>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
 
@@ -48,23 +48,53 @@
                         <div class="layui-card-header">分析结果</div>
                         <div class="layui-card-body" style="min-height: 280px;">
                             <div  class="layui-col-sm12" style="height: 280px;">
-                                <p>
-                                <label class="layui-form-label">小麦穗：</label>
+                                <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <label for="roleCode" class="layui-form-label">
+                                        小麦穗
+                                    </label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="roleCode" name="roleCode" required="" lay-verify="required"
+                                               autocomplete="off" class="layui-input" readonly value="${metadata.Ears}">
+                                    </div>
+                                </div>
+                                    <div class="layui-form-item">
+                                        <label for="roleCode" class="layui-form-label">
+                                            穗部籽粒
+                                        </label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" id="roleCode" name="roleCode" required="" lay-verify="required"
+                                                   autocomplete="off" class="layui-input" readonly value="${metadata.Spikelets}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label for="roleCode" class="layui-form-label">
+                                            是否有芒
+                                        </label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" id="roleCode" name="roleCode" required="" lay-verify="required"
+                                                   autocomplete="off" class="layui-input" readonly value="${metadata.Awns}">
+                                        </div>
+                                    </div>
 
-                                    ${metadata.Ears}
-                                </p>
-                                <p>
-                                    <label class="layui-form-label">穗粒：</label>
+                                </form>
+<%--                                <p>--%>
+<%--                                <label class="layui-form-label">小麦穗：</label>--%>
 
-                                    ${metadata.Spikelets}
+<%--                                    ${metadata.Ears}--%>
+<%--                                </p>--%>
+<%--                                <p>--%>
+<%--                                    <label class="layui-form-label">穗粒：</label>--%>
 
-                                </p>
-                                <p>
-                                    <label class="layui-form-label">是否有芒：</label>
+<%--                                    ${metadata.Spikelets}--%>
 
-                                    ${metadata.Awns}
+<%--                                </p>--%>
+<%--                                <p>--%>
+<%--                                    <label class="layui-form-label">是否有芒：</label>--%>
 
-                                </p>
+<%--                                    ${metadata.Awns}--%>
+
+<%--                                </p>--%>
 
                             </div>
 

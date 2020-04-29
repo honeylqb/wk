@@ -21,6 +21,10 @@ public interface MenuManageService {
     public Object showNavigation();
 
     public Object findUserMenuTree( Map<String,Object> map);
+    public Object addMenu( Map<String,Object> map);
+
+    public Object findMenuParentSelect( Map<String,Object> map);
+    public Object updateMenu( Map<String,Object> map);
 
   //  public void saveAccount(Account account);
 

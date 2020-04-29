@@ -2,11 +2,14 @@ package com.itheima.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.itheima.dao.BaseDao;
 import com.itheima.dao.WheatImageDao;
 import com.itheima.domain.Account;
 import com.itheima.service.WheatImageService;
 
 import com.itheima.utils.JsonUtils;
+import com.itheima.utils.LayuiResult;
+import com.itheima.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +30,17 @@ import java.util.Map;
 public class WheatImageServiceImpl implements WheatImageService {
     @Autowired
     private WheatImageDao wheatImageDao;
+
+    @Autowired
+    private BaseDao baseDao;
     @Override
-    public List<Map<String,Object>> findAll() {
+    public Object findAll(Map<String,Object> map) {
         System.out.println("业务层。。WheatImageServiceImpl.findAll");
-        return wheatImageDao.findAll();
+        List<Map<String,Object>> result = baseDao.queryForList("WheatImageDao.findAll",map);
+
+        int count = baseDao.getTotalCount("WheatImageDao.count",map);
+
+        return LayuiResult.ok(count,result);
     }
 
     @Override
@@ -136,6 +146,19 @@ public class WheatImageServiceImpl implements WheatImageService {
 
         return map;
     }
+    @Override
+    public Object wheatImageReInfoLog(Map<String,Object> map) {
+        try {
+            System.out.println("wheatImageReInfoLog:"+map);
+            map.put("vid", UUIDUtils.getId());
+            int count = baseDao.insert("WheatImageDao.wheatImageReInfoLog",map);
+            return count;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
 
+
+    }
 
 }

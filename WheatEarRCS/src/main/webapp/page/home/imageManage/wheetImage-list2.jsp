@@ -69,13 +69,13 @@
         </fieldset>
 
         <div class="layui-btn-group">
-            <button class="layui-btn " onclick="parent.xadmin.open('在tab打开','${pageContext.request.contextPath}/page/imageManage/AddImage.jsp')">添加2</button>
-            <button class="layui-btn data-add-btn">添加</button>
+<%--            <button class="layui-btn " onclick="parent.xadmin.open('在tab打开','${pageContext.request.contextPath}/page/imageManage/AddImage.jsp')">添加2</button>--%>
+<%--            <button class="layui-btn data-add-btn">添加</button>--%>
             <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
         </div>
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+<%--            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>--%>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
     </div>
@@ -116,13 +116,17 @@
             url: '${pageContext.request.contextPath}/wheatImageController/findAll.do',
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
-                {field: 'vid', width: 80, title: 'ID', sort: true},
+                //{field: 'vid', width: 80, title: 'ID', sort: true},
                 {field: 'imageName', width: 150, title: '图片名称', sort: true},
-                {field: 'wheatType', width: 100, title: '品种', sort: true},
-                {field: 'imagePath', width: 200, title: '图片路径'},
-                {field: 'createTime', width: 300, title: '创建时间', sort: true,templet:function (d) {
+                //{field: 'wheatType', width: 100, title: '品种', sort: true},
+                //{field: 'imagePath', width: 200, title: '图片路径'},
+                {field: 'createTime', width: 160, title: '创建时间', sort: true,templet:function (d) {
                     return showTime(d.createTime);}},
-                {title: '操作', minWidth: 50, templet: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'ears', width: 90, title: '小麦穗数'},
+                {field: 'spikelets', width: 90, title: '小麦穗粒数'},
+                {field: 'awns', width: 90, title: '是否有芒'},
+                {field: 'isSuccess', width: 90, title: '是否成功'},
+                 {title: '操作', minWidth: 50, templet: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,

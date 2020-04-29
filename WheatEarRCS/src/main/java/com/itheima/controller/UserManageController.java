@@ -296,4 +296,23 @@ public class UserManageController {
 
     }
 
+    @RequestMapping(path = "/updateUserInfo.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object updateUserInfo(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+       try {
+           System.out.println(map.toString());
+
+           Object result = userManageService.updateUserInfo(map);
+
+           System.out.println("UserManageController.updateUserInfo.do出参："+result.toString());
+           return result;
+
+
+       }catch (Exception e){
+           e.printStackTrace();
+           return LayuiResult.error();
+       }
+
+    }
+
 }
