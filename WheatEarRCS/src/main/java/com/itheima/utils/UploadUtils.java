@@ -31,6 +31,20 @@ public class UploadUtils {
 		int index = name.lastIndexOf("\\");
 		return name.substring(index+1);
 	}
+
+	/**
+	 * 获取文件真实名称
+	 * @param name
+	 * @return
+	 */
+	public static String getRealPath(String name){
+		// c:/upload/1.jpg    1.jpg
+		//获取最后一个"/"
+		int index = name.lastIndexOf("\\");
+		return name.substring(0,index+1);
+	}
+
+
 	
 	/**
 	 * 获取文件目录
@@ -44,19 +58,19 @@ public class UploadUtils {
 		String hex = Integer.toHexString(i);
 		System.out.println("hex:"+hex);
 		int j=hex.length();
-		System.out.println("---------------------"+j);
+		//System.out.println("---------------------"+j);
 		for(int k=0;k<8-j;k++){
 			Random random = new Random();
 			//random.nextInt(10);
 			hex=""+random.nextInt(10)+hex;
-			System.out.println("---------------------");
+			//System.out.println("---------------------");
 		}
 		return "/"+hex.charAt(0)+"/"+hex.charAt(1)+"/"+hex.charAt(2)+"/"+hex.charAt(3)+"/"+hex.charAt(4)+"/"+hex.charAt(5)+"/"+hex.charAt(6)+"/"+hex.charAt(7);
 	}
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		//String s="G:\\day17-基础加强\\resource\\1.jpg";
+		String s="E://C//BBB/2.jpg";
 		//String s="1.jgp";
 		//String realName = getRealName(s);
 		//System.out.println(realName);
@@ -68,8 +82,12 @@ public class UploadUtils {
 		// /b/b/5/6/3/b/a/1/  234234.jpg
 		// /f/e/d/c/4/9/8/4/  2341242314321.bmp
 		System.out.println(dir);
-		
-		
-		
+
+
+		System.out.println(getRealPath(s));
+
+
+
+		System.out.println(s.substring(0,s.lastIndexOf("/")));
 	}
 }

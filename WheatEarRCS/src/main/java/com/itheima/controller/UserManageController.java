@@ -101,6 +101,11 @@ public class UserManageController {
             return LayuiResult.error("用户名或密码错误");
         }else{
             Map<String,Object> loginUserInfo = list.get(0);
+
+
+            if("1".equals(loginUserInfo.get("userState"))){
+                return LayuiResult.error("该用户被禁用，无法登陆！");
+            }
             System.out.println("登录用户信息："+loginUserInfo.toString());
             model.addAttribute("loginUserInfo",loginUserInfo);
             request.getSession().setAttribute("loginUserInfo", loginUserInfo);
@@ -219,21 +224,29 @@ public class UserManageController {
     @RequestMapping(path = "/findUserLoginLog.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
     @ResponseBody
     public Object findUserLoginLog(Model model, HttpServletRequest request){
-        System.out.println("wheatImageController.findAll.do");
-        Map<String,Object> condition = new HashMap<>();
-        int page = Integer.parseInt(request.getParameter("page"));
-        int limit = Integer.parseInt(request.getParameter("limit"));
-        condition.put("start", (page - 1) * limit);
+//        try {
 
-        condition.put("limit", limit);
-        Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
-        condition.put("userId", loginUserInfo.get("vid"));
-        System.out.println("condition:"+condition.toString());
-        Object result = userManageService.findUserLoginLog(condition);
+            System.out.println("wheatImageController.findAll.do");
+            Map<String,Object> condition = new HashMap<>();
+            int page = Integer.parseInt(request.getParameter("page"));
+            int limit = Integer.parseInt(request.getParameter("limit"));
+            condition.put("start", (page - 1) * limit);
+
+            condition.put("limit", limit);
+            Map<String,Object> loginUserInfo = ( Map<String,Object>)request.getSession().getAttribute("loginUserInfo");
+            condition.put("userId", loginUserInfo.get("vid"));
+            System.out.println("condition:"+condition.toString());
+            Object result = userManageService.findUserLoginLog(condition);
 
 
 
-        return result;
+            return result;
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return LayuiResult.error();
+//        }
+
+
     }
 
     @RequestMapping(path = "/addUser.do",produces = {"text/html;charset=UTF-8;", "application/json;"})

@@ -7,8 +7,11 @@
         vid vid,
         image_name imageName,
         image_path imagePath,
+        uuid_image_name uuidImageName,
+        compress_path compressPath,
+        concat(compress_path,'/',uuid_image_name) as compressImagePath,
         wheat_type wheatType,
-        create_time createTime,
+        <![CDATA[date_format(create_time,'%Y-%m-%d %H:%i:%s')]]>  createTime,
         create_user createUser,
         is_delete isDelete,
         ears ears,
@@ -28,7 +31,7 @@
             is_delete = 0
             and user_id = #{userId}
         </where>
-        order by create_time
+        order by create_time desc
         <if test="limit != null and limit !=''  ">
             limit #{start},#{limit}
         </if>
@@ -37,6 +40,11 @@
     <insert id="wheatImageReInfoLog" parameterType="Map">
         insert into wheetimage (vid,image_name,image_path,wheat_type,create_user,user_id,ears,spikelets,awns,create_time,is_success)
         values(#{vid},#{imageName},#{imagePath},#{wheatType},#{userId},#{userId},#{Ears},#{Spikelets},#{Awns},now(),#{isSuccess})
+    </insert>
+
+    <insert id="addWheatImage" parameterType="Map">
+        insert into wheetimage (vid,image_name,image_path,uuid_image_name,compress_path,wheat_type,create_user,user_id)
+        values(#{vid},#{imageName},#{imagePath},#{uuidName},#{compressPath},#{wheatType},#{userId},#{userId})
     </insert>
 
     <select id="count" resultType="int">

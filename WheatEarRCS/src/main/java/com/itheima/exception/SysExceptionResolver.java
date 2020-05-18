@@ -25,6 +25,10 @@ public class SysExceptionResolver implements HandlerExceptionResolver {
      */
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        System.out.println("---------------异常捕获---------------------------");
+        ex.printStackTrace();
+
+
         //获取到异常对象
         SysException e = null;
         if(ex instanceof SysException){
@@ -34,7 +38,7 @@ public class SysExceptionResolver implements HandlerExceptionResolver {
         }
 
         ModelAndView mv = new ModelAndView();
-        mv.addObject("errorMsg",e.getMessage());
+        mv.addObject("errorMsg",ex.getMessage());
         mv.setViewName("error");
         return mv;
     }

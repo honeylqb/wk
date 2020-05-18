@@ -25,5 +25,9 @@ public interface WheatImageService {
 
     public Object wheatImageReInfoLog(Map<String,Object> map) ;
 
+    public Object addWheatImage(Map<String,Object> map) ;
+
+
+
 
 }

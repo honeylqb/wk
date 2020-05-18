@@ -9,6 +9,7 @@ import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -45,6 +46,14 @@ public class WheatImageController {
         model.addAttribute("list",result);
 
         return result;
+    }
+
+    @RequestMapping(path = "/shibie.do",produces = {"text/html;charset=UTF-8;", "application/json;"})
+    @ResponseBody
+    public Object shibie(Model model, HttpServletRequest request,@RequestBody HashMap<String, Object> map){
+        logger.info("------------shibie-------------------------------------------");
+        logger.info("[穗粒识别算法入参：]"+map.toString());
+        return LayuiResult.ok();
     }
 
 

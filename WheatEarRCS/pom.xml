@@ -230,6 +230,24 @@
     </dependency>
 
 
+    <dependency>
+      <groupId>wheat</groupId>
+      <artifactId>javabuilder</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>wheat</groupId>
+      <artifactId>WheatEarEcs</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+
+    <!-- 用于生成图片的缩略图 -->
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>0.4.8</version>
+    </dependency>
 
   </dependencies>
 

@@ -28,4 +28,5 @@ public class MD5Utils {
 		String str=MD5Utils.md5("root");
 		System.out.println(str);
 	}
+
 }

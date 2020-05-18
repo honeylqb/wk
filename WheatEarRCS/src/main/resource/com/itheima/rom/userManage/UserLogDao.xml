@@ -50,9 +50,9 @@
         <where>
             user_id = #{userId}
         </where>
-        <if test="limit != null and limit !=''  ">
-            limit #{start},#{limit}
-        </if>
+<!--        <if test="limit != null and limit !=''  ">-->
+<!--            limit #{start},#{limit}-->
+<!--        </if>-->
     </select>
 
     <!--登录用-->

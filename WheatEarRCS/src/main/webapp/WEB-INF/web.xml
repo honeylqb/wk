@@ -8,6 +8,11 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+
+<!--  <listener>-->
+<!--    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>-->
+<!--  </listener>-->
+
   <!--设置配置文件路径-->
   <context-param>
     <param-name>contextConfigLocation</param-name>
@@ -83,5 +88,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+
 
 </web-app>

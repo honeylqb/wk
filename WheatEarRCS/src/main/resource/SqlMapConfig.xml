@@ -26,6 +26,6 @@
         <mapper resource="com/itheima/rom/MenuManage/MenuManage.xml"/>
         <mapper resource="com/itheima/rom/RoleManage/RoleManage.xml"/>
         <mapper resource="com/itheima/rom/BaseInfo.xml"/>
-
     </mappers>
+
 </configuration>

@@ -30,17 +30,19 @@
 						<form method="post">
 							<div class="layui-form-item">
 								<input type="hidden" name="secret" value="%E9%98%B2%E6%AD%A2%E5%B9%BF%E5%91%8A%E7%8B%97454212">
-								<label for="L_email" class="layui-form-label">手机/账号</label>
+								<label for="username" class="layui-form-label">账号</label>
 								<div class="layui-input-inline">
 									<input type="text" id="username" name="loginName" required="" lay-verify="required" autocomplete="off" class="layui-input">
 								</div>
-								<div class="layui-form-mid layui-word-aux"></div>
+<%--								<div class="layui-form-mid layui-word-aux"></div>--%>
 							</div>
+
 							<div class="layui-form-item">
-								<label for="L_pass" class="layui-form-label">密码</label>
+								<label for="password" class="layui-form-label">密码</label>
 								<div class="layui-input-inline"> <input type="password" id="password" name="pass" required="" lay-verify="required" autocomplete="off" class="layui-input">
 								</div>
 							</div>
+
 							<div class="layui-form-item">
 								<label class="layui-form-label">滑动验证</label>
 								<div class="layui-input-inline">
@@ -51,7 +53,7 @@
 								<div class="layui-input-inline">
 									<button class="layui-btn" lay-submit lay-filter="formDemo">立即登录</button>
 									<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-									<span style="padding-left:20px;"> <a href="/user/forget">忘记密码？</a> </span>
+<%--									<span style="padding-left:20px;"> <a href="/user/forget">忘记密码？</a> </span>--%>
 								</div>
 							</div>
 						</form>

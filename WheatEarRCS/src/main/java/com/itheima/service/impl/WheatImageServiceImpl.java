@@ -2,6 +2,7 @@ package com.itheima.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.itheima.controller.FileUploadController;
 import com.itheima.dao.BaseDao;
 import com.itheima.dao.WheatImageDao;
 import com.itheima.domain.Account;
@@ -10,6 +11,7 @@ import com.itheima.service.WheatImageService;
 import com.itheima.utils.JsonUtils;
 import com.itheima.utils.LayuiResult;
 import com.itheima.utils.UUIDUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ import java.util.Map;
  */
 @Service("wheatImageService")
 public class WheatImageServiceImpl implements WheatImageService {
+    private static  final Logger logger = Logger.getLogger(WheatImageServiceImpl.class);
     @Autowired
     private WheatImageDao wheatImageDao;
 
@@ -152,6 +155,22 @@ public class WheatImageServiceImpl implements WheatImageService {
             System.out.println("wheatImageReInfoLog:"+map);
             map.put("vid", UUIDUtils.getId());
             int count = baseDao.insert("WheatImageDao.wheatImageReInfoLog",map);
+            return count;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+    @Override
+    public Object addWheatImage(Map<String,Object> map) {
+        logger.info("上传添加图片信息。。。。");
+        try {
+            System.out.println("addWheatImage:"+map);
+            map.put("vid", UUIDUtils.getId());
+            int count = baseDao.insert("WheatImageDao.addWheatImage",map);
             return count;
         }catch (Exception e){
             e.printStackTrace();
